@@ -3,6 +3,9 @@ package org.example.shedu.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,4 +25,9 @@ public class District {
 
     @ManyToOne
     private Region region;
+
+    private boolean deleted;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }
