@@ -1,4 +1,4 @@
-package org.example.shedu.payload;
+package org.example.shedu.payload.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

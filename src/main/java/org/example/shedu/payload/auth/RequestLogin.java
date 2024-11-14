@@ -1,4 +1,4 @@
-package org.example.shedu.payload;
+package org.example.shedu.payload.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

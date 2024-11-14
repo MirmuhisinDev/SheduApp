@@ -1,4 +1,4 @@
-package org.example.shedu.service;
+package org.example.shedu.service.authService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

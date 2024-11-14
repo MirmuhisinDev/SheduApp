@@ -25,7 +25,9 @@ public class DataLoader implements CommandLineRunner {
         if (ddl.equals("create")) {
             User user = User.builder()
                     .fullName("SuperAdmin")
-                    .email("superadmin@example.com")
+                    .birthdate(25)
+                    .phoneNumber("123456789")
+                    .email("superadmin@gmail.com")
                     .password(passwordEncoder.encode("superadmin"))
                     .role(Role.ROLE_SUPER_ADMIN)
                     .build();

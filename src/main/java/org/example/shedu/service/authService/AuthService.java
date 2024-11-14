@@ -1,11 +1,11 @@
-package org.example.shedu.service;
+package org.example.shedu.service.authService;
 
 import lombok.RequiredArgsConstructor;
 import org.example.shedu.entity.User;
 import org.example.shedu.entity.enums.Role;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.RequestLogin;
-import org.example.shedu.payload.RequestUser;
+import org.example.shedu.payload.auth.RequestLogin;
+import org.example.shedu.payload.auth.RequestUser;
 import org.example.shedu.repository.FileRepository;
 import org.example.shedu.repository.UserRepository;
 import org.example.shedu.security.JwtProvider;
@@ -78,7 +78,7 @@ public class AuthService {
         return new ApiResponse("Faollashtirish kodi topilmadi",404);
     }
 
-    public ApiResponse saveAdmin(RequestUser requestUser){
+    public ApiResponse saveMaster(RequestUser requestUser){
         Optional<User> byEmail = userRepository.findByEmail(requestUser.getEmail());
         if(byEmail.isEmpty()){
             return new ApiResponse("Emailingiz topilmadi",404);
