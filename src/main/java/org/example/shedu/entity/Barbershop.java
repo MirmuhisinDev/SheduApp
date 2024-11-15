@@ -35,6 +35,8 @@ public class Barbershop {
     @ManyToOne
     private File file;
 
+    private boolean deleted;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

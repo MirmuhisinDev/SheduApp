@@ -1,11 +1,13 @@
 package org.example.shedu.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.shedu.entity.District;
 import org.example.shedu.entity.Region;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.Pageable;
 import org.example.shedu.payload.request.RegionDto;
 import org.example.shedu.payload.response.RegionResponse;
+import org.example.shedu.repository.DistrictRepository;
 import org.example.shedu.repository.RegionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RegionService {
     private final RegionRepository regionRepository;
+    private final DistrictRepository districtRepository;
 
     public ApiResponse addRegion(RegionDto regionDto) {
         boolean b = regionRepository.existsByNameAndDeletedIsFalse(regionDto.getRegionName());
@@ -88,9 +91,18 @@ public class RegionService {
         if (byId.isEmpty()) {
             return new ApiResponse("Region topilmadi",404);
         }
+
+        List<District> allByRegion = districtRepository.findAllByRegionIdAndDeletedFalse(id);
+        List<District> districts = new ArrayList<>();
+        for (District district : allByRegion) {
+            district.setRegion(null);
+            districts.add(district);
+        }
+
         Region region = byId.get();
         region.setDeleted(true);
         regionRepository.save(region);
+        districtRepository.saveAll(districts);
         return new ApiResponse("Region muvaffaqiyatli o'chirildi.",200);
     }
 }
