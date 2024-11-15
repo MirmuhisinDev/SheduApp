@@ -7,6 +7,8 @@ public class SecurityConstants {
             "/users/**",
             "/region/**",
             "/district/**",
+            "/barbershop/**",
+            "/service/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v2/api-docs",
