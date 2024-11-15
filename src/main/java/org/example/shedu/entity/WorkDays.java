@@ -24,4 +24,6 @@ public class WorkDays {
 
     @Column(nullable = false)
     private Integer closeTime;
+
+    private boolean deleted;
 }

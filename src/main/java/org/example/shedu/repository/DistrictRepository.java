@@ -16,4 +16,5 @@ public interface DistrictRepository extends JpaRepository<District, Integer> {
     boolean existsByNameAndIdNot(String districtName, Integer id);
 
     List<District> findAllByRegionIdAndDeletedFalse(Integer regionId);
+    List<District> findAllByIdAndDeletedFalse(Integer questionId);
 }
