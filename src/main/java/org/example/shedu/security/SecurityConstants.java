@@ -9,6 +9,7 @@ public class SecurityConstants {
             "/district/**",
             "/barbershop/**",
             "/service/**",
+            "/order/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v2/api-docs",

@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_MASTER')")
     @GetMapping("/getOne/{id}")
     public ResponseEntity<ApiResponse> getOne(@PathVariable Integer id) {
         ApiResponse byId = userService.getById(id);
         return ResponseEntity.ok(byId);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_MASTER')")
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAll(@RequestParam (defaultValue = "0") int page,
                                               @RequestParam (defaultValue = "5") int size) {
@@ -41,7 +39,6 @@ public class UserController {
         return ResponseEntity.ok(delete);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_MASTER')")
     @GetMapping("/search")
     public ResponseEntity<ApiResponse> searchByFirstName(@RequestParam ("fullName") String fullName) {
         ApiResponse apiResponse = userService.searchByFullName(fullName);

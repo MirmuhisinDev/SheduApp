@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class DistrictResponse {
-    private int regionId;
+    private String regionName;
     private String district;
     private LocalDateTime createdAt;
 }

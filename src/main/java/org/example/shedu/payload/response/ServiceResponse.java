@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @Builder
 public class ServiceResponse {
     private int id;
+    private String barbershop;
     private String serviceName;
     private int price;
     private Integer serviceTime;
     private String description;
-    private int barbershopId;
     private Long fileId;
     private LocalDateTime createdAt;
     private String ownerFullName;

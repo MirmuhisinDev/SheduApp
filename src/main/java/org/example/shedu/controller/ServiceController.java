@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class ServiceController {
     private final ServicesService servicesService;
 
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_MASTER')")
+//    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_MASTER')")
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addService(@RequestBody @Valid ServiceDto serviceDto){
         ApiResponse apiResponse = servicesService.addService(serviceDto);

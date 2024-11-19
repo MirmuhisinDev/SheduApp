@@ -1,9 +1,9 @@
 package org.example.shedu.dataloader;
 
 import lombok.RequiredArgsConstructor;
-import org.example.shedu.entity.User;
+import org.example.shedu.entity.*;
 import org.example.shedu.entity.enums.Role;
-import org.example.shedu.repository.UserRepository;
+import org.example.shedu.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +16,10 @@ public class DataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RegionRepository regionRepository;
+    private final DistrictRepository districtRepository;
+    private final BarbershopRepository barbershopRepository;
+    private final ServiceRepository serviceRepository;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -30,6 +34,7 @@ public class DataLoader implements CommandLineRunner {
                     .email("superadmin@gmail.com")
                     .password(passwordEncoder.encode("superadmin"))
                     .role(Role.ROLE_SUPER_ADMIN)
+                    .enabled(true)
                     .build();
             userRepository.save(user);
         }

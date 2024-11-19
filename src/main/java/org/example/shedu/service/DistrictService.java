@@ -54,7 +54,7 @@ public class DistrictService {
 
         DistrictResponse response = DistrictResponse.builder()
                 .district(byId.get().getName())
-                .regionId(byId.get().getRegion().getId())
+                .regionName(byId.get().getRegion().getName())
                 .createdAt(byId.get().getCreatedAt())
                 .build();
         return new ApiResponse(response);
@@ -67,7 +67,7 @@ public class DistrictService {
 
         for (District district : all) {
             DistrictResponse response = DistrictResponse.builder()
-                    .regionId(district.getRegion().getId())
+                    .regionName(district.getRegion().getName())
                     .district(district.getName())
                     .createdAt(district.getCreatedAt())
                     .build();

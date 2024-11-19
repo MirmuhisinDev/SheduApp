@@ -2,6 +2,7 @@ package org.example.shedu.repository;
 
 import org.example.shedu.entity.District;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,7 +12,7 @@ public interface DistrictRepository extends JpaRepository<District, Integer> {
 
     boolean existsByNameAndDeletedIsFalse(String name);
 
-    Page<District> findAllByDeletedFalse(Pageable pageable);
+    Page<District> findAllByDeletedFalse(PageRequest pageable);
 
     boolean existsByNameAndIdNot(String districtName, Integer id);
 

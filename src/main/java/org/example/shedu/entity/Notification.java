@@ -20,8 +20,9 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
     private String title;
+
+    private String message;
 
     @ManyToOne
     private User user;

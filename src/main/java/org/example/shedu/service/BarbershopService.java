@@ -61,7 +61,7 @@ public class BarbershopService {
                 .name(byId.get().getName())
                 .info(byId.get().getInfo())
                 .email(byId.get().getEmail())
-                .districtId(byId.get().getDistrict().getId())
+                .district(byId.get().getDistrict().getName())
                 .fileId(byId.get().getFile().getId() != null ? fileRepository.findById(byId.get().getFile().getId()).get().getId() : null)
                 .createdAt(byId.get().getCreatedAt())
                 .build();
@@ -79,7 +79,7 @@ public class BarbershopService {
                     .name(barbershop.getName())
                     .info(barbershop.getInfo())
                     .email(barbershop.getEmail())
-                    .districtId(barbershop.getDistrict().getId())
+                    .district(barbershop.getDistrict().getName())
                     .ownerFullName(barbershop.getCreatedBy() != null ? barbershop.getCreatedBy().getFullName() : null)
                     .fileId(barbershop.getFile() != null ? barbershop.getFile().getId() : null)
                     .createdAt(barbershop.getCreatedAt())

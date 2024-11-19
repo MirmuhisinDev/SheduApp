@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegionDto {
-    private int id;
     @NotBlank
     private String regionName;
 }

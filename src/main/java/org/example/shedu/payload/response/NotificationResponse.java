@@ -9,13 +9,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class BarbershopResponse {
+public class NotificationResponse {
     private int id;
-    private String name;
-    private String info;
-    private String email;
-    private String district;
-    private long fileId;
+    private String title;
+    private String message;
+    private String userFullName;
     private LocalDateTime createdAt;
-    private String ownerFullName;
+
+
 }

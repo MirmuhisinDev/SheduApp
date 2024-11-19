@@ -28,15 +28,16 @@ public class ServicesService {
     private final PaymentRepository paymentRepository;
 
     public ApiResponse addService(ServiceDto serviceDto) {
+        Optional<Barbershop> byId = barbershopRepository.findById(serviceDto.getBarbershopId());
+        if (byId.isEmpty()) {
+            return new ApiResponse("Barbershop does not exist!",404);
+        }
+
         Optional<Service> byServiceName = serviceRepository.findByServiceName(serviceDto.getServiceName());
         if (byServiceName.isPresent()) {
             return new ApiResponse("Service already exists!",400);
         }
 
-        Optional<Barbershop> byId = barbershopRepository.findById(serviceDto.getBarbershopId());
-        if (byId.isEmpty()) {
-            return new ApiResponse("Barbershop does not exist!",404);
-        }
 
         Service service = Service.builder()
                 .barbershop(byId.get())
@@ -57,7 +58,7 @@ public class ServicesService {
         }
         ServiceResponse response = ServiceResponse.builder()
                 .id(byId.get().getId())
-                .barbershopId(byId.get().getBarbershop().getId())
+                .barbershop(byId.get().getBarbershop().getName())
                 .serviceName(byId.get().getServiceName())
                 .price(byId.get().getPrice())
                 .serviceTime(byId.get().getServiceTime())
@@ -69,8 +70,7 @@ public class ServicesService {
     }
 
     public ApiResponse allServices(int page, int size){
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Service> all = serviceRepository.findAllByDeletedFalse(pageRequest);
+        Page<Service> all = serviceRepository.findAllByDeletedFalse(PageRequest.of(page, size));
         List<ServiceResponse> responses = new ArrayList<>();
         for (Service service : all) {
             ServiceResponse response = ServiceResponse.builder()
@@ -79,7 +79,7 @@ public class ServicesService {
                     .price(service.getPrice())
                     .serviceTime(service.getServiceTime())
                     .description(service.getDescription())
-                    .barbershopId(service.getBarbershop().getId())
+                    .barbershop(service.getBarbershop().getName())
                     .fileId(service.getFile() != null ? service.getFile().getId() : null)
                     .createdAt(service.getCreatedAt())
                     .build();

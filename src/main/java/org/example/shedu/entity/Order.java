@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.shedu.entity.enums.Status;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +33,12 @@ public class Order {
     private Barbershop barbershop;
 
     @CreationTimestamp
-    private LocalDateTime orderDayTime;
+    private LocalTime startTime;
+    @CreationTimestamp
+    private LocalTime endTime;
+
+    @CreationTimestamp
+    private LocalDate orderDayTime;
 
     private Integer duration;
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class BarbershopController {
     private final BarbershopService barbershopService;
 
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
+//    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addBarbershop(@RequestBody @Valid BarbershopDto barbershopDto,
                                                      @CurrentUser User user){

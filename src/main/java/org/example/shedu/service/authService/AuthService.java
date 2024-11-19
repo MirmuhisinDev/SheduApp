@@ -22,7 +22,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSenderService emailSenderService;
-    private JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
     private final FileRepository fileRepository;
 
     public ApiResponse register(RequestUser requestUser){
@@ -43,8 +43,8 @@ public class AuthService {
                 .enabled(false)
                 .build();
         userRepository.save(user);
-        emailSenderService.send(user.getEmail(), "VERIFY EMAIL", "Your activation code is: " + randomNumber);
-        return new ApiResponse("Successfully registered",201);
+        emailSenderService.sendEmail(user.getEmail(), "VERIFY EMAIL", "Your activation code is: " + randomNumber);
+        return new ApiResponse("Successfully registered. Sending code your email.",201);
     }
     public int randomNumber(){
         Random random = new Random();

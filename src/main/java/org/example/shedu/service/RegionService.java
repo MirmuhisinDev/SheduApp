@@ -30,7 +30,6 @@ public class RegionService {
         }
 
         Region region = Region.builder()
-                .id(regionDto.getId())
                 .name(regionDto.getRegionName())
                 .build();
         regionRepository.save(region);
