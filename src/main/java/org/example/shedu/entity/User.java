@@ -80,4 +80,14 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
+
+    public User(String fullName, String phoneNumber, int birthdate, String email, String password, Role role) {
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.birthdate = birthdate;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 }
