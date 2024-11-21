@@ -3,6 +3,9 @@ package org.example.shedu.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalTime;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -16,14 +19,16 @@ public class WorkDays {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @OneToOne
     private Barbershop barbershop;
 
     @Column(nullable = false)
-    private Integer openTime;
+    private LocalTime openTime;
 
     @Column(nullable = false)
-    private Integer closeTime;
+    private LocalTime closeTime;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Days> days;
 
     private boolean deleted;
 }

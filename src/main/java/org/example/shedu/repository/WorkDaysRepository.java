@@ -2,9 +2,12 @@ package org.example.shedu.repository;
 
 import org.example.shedu.entity.WorkDays;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import java.util.Optional;
+
 
 public interface WorkDaysRepository extends JpaRepository<WorkDays, Integer> {
-    List<WorkDays> findAllByBarbershopIdAndDeletedFalse(Integer questionId);
+
+    Optional<WorkDays> findByBarbershopIdAndDeletedFalse(Integer id);
 }
