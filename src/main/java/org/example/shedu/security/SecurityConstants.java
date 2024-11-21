@@ -10,6 +10,7 @@ public class SecurityConstants {
             "/barbershop/**",
             "/service/**",
             "/order/**",
+            "/chat/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v2/api-docs",
