@@ -5,7 +5,7 @@ import org.example.shedu.entity.Barbershop;
 import org.example.shedu.entity.District;
 import org.example.shedu.entity.Region;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.Pageable;
+import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.request.DistrictDto;
 import org.example.shedu.payload.response.DistrictResponse;
 import org.example.shedu.repository.BarbershopRepository;
@@ -73,7 +73,7 @@ public class DistrictService {
                     .build();
             responses.add(response);
         }
-        Pageable pageable = Pageable.builder()
+        CustomerPageable pageable = CustomerPageable.builder()
                 .page(all.getNumber())
                 .size(all.getSize())
                 .totalPages(all.getTotalPages())

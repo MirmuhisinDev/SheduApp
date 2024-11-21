@@ -32,15 +32,13 @@ public class Order {
     @ManyToOne
     private Barbershop barbershop;
 
-    @CreationTimestamp
+
     private LocalTime startTime;
-    @CreationTimestamp
+
     private LocalTime endTime;
 
-    @CreationTimestamp
-    private LocalDate orderDayTime;
 
-    private Integer duration;
+    private LocalDate orderDay;
 
     private Status status;
 

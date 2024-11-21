@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
-@Table(name = "work_days")
+@Table(name = "work")
 
 public class WorkDays {
     @Id
@@ -27,7 +27,7 @@ public class WorkDays {
 
     @Column(nullable = false)
     private LocalTime closeTime;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Days> days;
 
     private boolean deleted;

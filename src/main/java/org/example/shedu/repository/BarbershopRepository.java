@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface BarbershopRepository extends JpaRepository<Barbershop, Integer> {
 
-    Optional<Barbershop> findByName(String name);
+    boolean existsByName(String name);
     Page<Barbershop> findAllByDeletedFalse(PageRequest pageable);
     List<Barbershop> findAllByDistrictIdAndDeletedFalse(Integer districtId);
     boolean existsByNameAndIdNot(String name, Integer id);

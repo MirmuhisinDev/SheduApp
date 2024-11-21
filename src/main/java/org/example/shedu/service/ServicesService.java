@@ -1,12 +1,9 @@
 package org.example.shedu.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.shedu.entity.Barbershop;
-import org.example.shedu.entity.Order;
-import org.example.shedu.entity.Payment;
-import org.example.shedu.entity.Service;
+import org.example.shedu.entity.*;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.Pageable;
+import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.request.ServiceDto;
 import org.example.shedu.payload.response.ServiceResponse;
 import org.example.shedu.repository.*;
@@ -28,24 +25,24 @@ public class ServicesService {
     private final PaymentRepository paymentRepository;
 
     public ApiResponse addService(ServiceDto serviceDto) {
-        Optional<Barbershop> byId = barbershopRepository.findById(serviceDto.getBarbershopId());
-        if (byId.isEmpty()) {
+        Barbershop byId = barbershopRepository.findById(serviceDto.getBarbershopId()).orElse(null);
+        if (byId == null) {
             return new ApiResponse("Barbershop does not exist!",404);
         }
 
-        Optional<Service> byServiceName = serviceRepository.findByServiceName(serviceDto.getServiceName());
-        if (byServiceName.isPresent()) {
+        if (serviceRepository.existsByServiceName(serviceDto.getServiceName())) {
             return new ApiResponse("Service already exists!",400);
         }
+        File file = fileRepository.findById(serviceDto.getFileId()).orElse(null);
 
 
         Service service = Service.builder()
-                .barbershop(byId.get())
+                .barbershop(byId)
                 .serviceName(serviceDto.getServiceName())
                 .price(serviceDto.getPrice())
                 .serviceTime(serviceDto.getServiceTime())
                 .description(serviceDto.getDescription())
-                .file(serviceDto.getFileId() != null ? fileRepository.findById(serviceDto.getFileId()).get() : null)
+                .file(file)
                 .build();
         serviceRepository.save(service);
         return new ApiResponse("Service added successfully!",201);
@@ -56,6 +53,9 @@ public class ServicesService {
         if (byId.isEmpty()) {
             return new ApiResponse("Service does not exist!",404);
         }
+
+        File file = fileRepository.findById(byId.get().getFile().getId()).orElse(null);
+        assert file != null;
         ServiceResponse response = ServiceResponse.builder()
                 .id(byId.get().getId())
                 .barbershop(byId.get().getBarbershop().getName())
@@ -63,14 +63,14 @@ public class ServicesService {
                 .price(byId.get().getPrice())
                 .serviceTime(byId.get().getServiceTime())
                 .description(byId.get().getDescription())
-                .fileId(byId.get().getFile() != null ? fileRepository.findById(byId.get().getFile().getId()).get().getId() :null)
+                .filepath(file.getFilepath())
                 .createdAt(byId.get().getCreatedAt())
                 .build();
         return new ApiResponse(response);
     }
 
     public ApiResponse allServices(int page, int size){
-        Page<Service> all = serviceRepository.findAllByDeletedFalse(PageRequest.of(page, size));
+        Page<Service> all = serviceRepository.findAll(PageRequest.of(page, size));
         List<ServiceResponse> responses = new ArrayList<>();
         for (Service service : all) {
             ServiceResponse response = ServiceResponse.builder()
@@ -80,12 +80,12 @@ public class ServicesService {
                     .serviceTime(service.getServiceTime())
                     .description(service.getDescription())
                     .barbershop(service.getBarbershop().getName())
-                    .fileId(service.getFile() != null ? service.getFile().getId() : null)
+                    .filepath(service.getFile().getFilepath())
                     .createdAt(service.getCreatedAt())
                     .build();
             responses.add(response);
         }
-        Pageable pageable = Pageable.builder()
+        CustomerPageable pageable = CustomerPageable.builder()
                 .page(all.getNumber())
                 .size(all.getSize())
                 .totalPages(all.getTotalPages())

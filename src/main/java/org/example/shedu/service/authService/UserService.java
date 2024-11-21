@@ -3,7 +3,7 @@ package org.example.shedu.service.authService;
 import lombok.RequiredArgsConstructor;
 import org.example.shedu.entity.User;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.Pageable;
+import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.auth.UpdateUser;
 import org.example.shedu.payload.response.UserResponse;
 import org.example.shedu.repository.UserRepository;
@@ -29,7 +29,7 @@ public class UserService {
                     .birthdate(byId.get().getBirthdate())
                     .phoneNumber(byId.get().getPhoneNumber())
                     .email(byId.get().getEmail())
-                    .password(byId.get().getPassword())
+                    .role(byId.get().getRole())
                     .build();
             return new ApiResponse(response);
         }
@@ -47,11 +47,10 @@ public class UserService {
                     .birthdate(user.getBirthdate())
                     .phoneNumber(user.getPhoneNumber())
                     .email(user.getEmail())
-                    .password(user.getPassword())
                     .build();
             responses.add(response);
         }
-        Pageable pageable = Pageable.builder()
+        CustomerPageable pageable = CustomerPageable.builder()
                 .page(users.getNumber())
                 .size(users.getSize())
                 .totalPages(users.getTotalPages())
@@ -86,6 +85,12 @@ public class UserService {
         return new ApiResponse("Sizning ma'lumotlaringiz topilmadi.",404);
     }
 
+
+    public ApiResponse getMe(User user){
+        UserResponse response = mapperUser(user);
+        return new ApiResponse(response);
+    }
+
     public ApiResponse searchByFullName(String fullName){
         List<User> byFullName = userRepository.findByFullName(fullName);
         List<UserResponse> responses = new ArrayList<>();
@@ -95,11 +100,21 @@ public class UserService {
                     .birthdate(user.getBirthdate())
                     .phoneNumber(user.getPhoneNumber())
                     .email(user.getEmail())
-                    .password(user.getPassword())
+                    .role(user.getRole())
                     .build();
             responses.add(response);
             return new ApiResponse(responses);
         }
         return new ApiResponse("Sizning ma'lumotlaringiz topilmadi.",404);
+    }
+
+    public UserResponse mapperUser(User user){
+        return UserResponse.builder()
+                .fullName(user.getFullName())
+                .birthdate(user.getBirthdate())
+                .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole())
+                .email(user.getEmail())
+                .build();
     }
 }

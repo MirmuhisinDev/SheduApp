@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.shedu.entity.District;
 import org.example.shedu.entity.Region;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.Pageable;
+import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.request.RegionDto;
 import org.example.shedu.payload.response.RegionResponse;
 import org.example.shedu.repository.DistrictRepository;
@@ -59,7 +59,7 @@ public class RegionService {
                     .build();
             responses.add(response);
         }
-        Pageable pageable = Pageable.builder()
+        CustomerPageable pageable = CustomerPageable.builder()
                 .page(request.getPageNumber())
                 .size(request.getPageSize())
                 .totalPages(regions.getTotalPages())

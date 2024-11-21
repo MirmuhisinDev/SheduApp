@@ -1,8 +1,10 @@
 package org.example.shedu.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.shedu.entity.User;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.auth.UpdateUser;
+import org.example.shedu.security.CurrentUser;
 import org.example.shedu.service.authService.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +19,12 @@ public class UserController {
     @GetMapping("/getOne/{id}")
     public ResponseEntity<ApiResponse> getOne(@PathVariable Integer id) {
         ApiResponse byId = userService.getById(id);
+        return ResponseEntity.ok(byId);
+    }
+
+    @GetMapping("/getMe")
+    public ResponseEntity<ApiResponse> getMe(@CurrentUser User user) {
+        ApiResponse byId = userService.getMe(user);
         return ResponseEntity.ok(byId);
     }
 

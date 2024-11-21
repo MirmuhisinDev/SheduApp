@@ -6,7 +6,7 @@ import org.example.shedu.entity.Order;
 import org.example.shedu.entity.Service;
 import org.example.shedu.entity.User;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.Pageable;
+import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.request.OrderDto;
 import org.example.shedu.payload.response.OrderResponse;
 import org.example.shedu.repository.BarbershopRepository;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +45,7 @@ public class OrderService {
         LocalTime start= orderDto.getStartTime();
         LocalTime end= orderDto.getEndTime();
 
-        Order byOrder = orderRepository.findByOrderDayTimeAndStartTimeAndEndTime(date, start, end).orElse(null);
+        Order byOrder = orderRepository.findByOrderDayAndStartTimeAndEndTime(date, start, end).orElse(null);
 
         if(byOrder != null) {
             return new ApiResponse("Order not found", 400);
@@ -57,7 +56,7 @@ public class OrderService {
                 .barbershop(byId.get())
                 .startTime(start)
                 .endTime(end)
-                .orderDayTime(date)
+                .orderDay(date)
                 .build();
         orderRepository.save(order);
         return new ApiResponse("Order created", 201);
@@ -75,7 +74,7 @@ public class OrderService {
                 .servicePrice(byId.get().getService().getPrice())
                 .BarbershopName(byId.get().getBarbershop().getName())
                 .userFullName(byId.get().getUser().getFullName())
-                .orderDate(byId.get().getOrderDayTime())
+                .orderDate(byId.get().getOrderDay())
                 .orderTime(byId.get().getStartTime())
                 .build();
         return new ApiResponse(response);
@@ -85,7 +84,7 @@ public class OrderService {
         Page<Order> orders = orderRepository.findAll(PageRequest.of(page, size));
         List<OrderResponse> responses = orders.map(this::toResponse).stream().toList();
 
-        Pageable pageable= Pageable.builder()
+        CustomerPageable pageable= CustomerPageable.builder()
                 .body(responses)
                 .totalPages(orders.getTotalPages())
                 .totalElements(orders.getTotalElements())
@@ -100,7 +99,7 @@ public class OrderService {
 
     private OrderResponse toResponse(Order order) {
         return OrderResponse.builder()
-                .orderDate(order.getOrderDayTime())
+                .orderDate(order.getOrderDay())
                 .servicePrice(order.getService().getPrice())
                 .userFullName(order.getUser().getFullName())
                 .orderTime(order.getStartTime())

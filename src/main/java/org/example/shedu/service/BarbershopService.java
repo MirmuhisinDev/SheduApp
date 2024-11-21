@@ -2,8 +2,9 @@ package org.example.shedu.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.shedu.entity.*;
+import org.example.shedu.entity.enums.Role;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.Pageable;
+import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.request.BarbershopDto;
 import org.example.shedu.payload.response.BarbershopResponse;
 import org.example.shedu.repository.*;
@@ -33,35 +34,26 @@ public class BarbershopService {
     private final WorkDaysService service;
 
     public ApiResponse addBarbershop(BarbershopDto barbershopDto, User user) {
-        Optional<Barbershop> byName = barbershopRepository.findByName(barbershopDto.getName());
-        if (byName.isPresent()) {
+        if (barbershopRepository.existsByName(barbershopDto.getName())) {
             return new ApiResponse("Barbershop with name " + barbershopDto.getName() + " already exists", 400);
         }
 
-        Optional<District> districtOpt = districtRepository.findById(barbershopDto.getDistrictId());
-        if (districtOpt.isEmpty()) {
+        District districtOpt = districtRepository.findById(barbershopDto.getDistrictId()).orElse(null);
+        if (districtOpt== null) {
             return new ApiResponse("District with id " + barbershopDto.getDistrictId() + " does not exist", 404);
         }
-       Barbershop barbershop1=byName.get();
-
-        District district = districtOpt.get();
 
         Barbershop barbershop = Barbershop.builder()
                 .name(barbershopDto.getName())
                 .info(barbershopDto.getInfo())
-                .email(barbershop1.getCreatedBy().getEmail())
-                .district(district)
+                .email(user.getEmail())
+                .district(districtOpt)
                 .file(barbershopDto.getFileId() != null ? fileRepository.findById(barbershopDto.getFileId()).orElse(null) : null)
-                .createdBy(user)
+                .owner(user)
                 .build();
 
         barbershopRepository.save(barbershop);
-        List<Days> days = new ArrayList<>();
-        for (Integer dayId : barbershopDto.getDays()) {
-            daysRepository.findById(dayId).ifPresent(days::add);
-        }
-
-        service.add(barbershopDto.getStartTime(), barbershopDto.getEndTime(), days, barbershop);
+        service.add(barbershopDto.getStartTime(), barbershopDto.getEndTime(), barbershopDto.getDays(), barbershop);
         return new ApiResponse("Barbershop with name " + barbershopDto.getName() + " added successfully", 200);
     }
 
@@ -96,8 +88,7 @@ public class BarbershopService {
     }
 
     public ApiResponse getAll(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Barbershop> all = barbershopRepository.findAllByDeletedFalse(pageRequest);
+        Page<Barbershop> all = barbershopRepository.findAllByDeletedFalse(PageRequest.of(page, size));
 
         List<BarbershopResponse> responses = new ArrayList<>();
         for (Barbershop barbershop : all) {
@@ -116,14 +107,14 @@ public class BarbershopService {
                     .fileId(barbershop.getFile() != null ? barbershop.getFile().getId() : null)
                     .createdAt(barbershop.getCreatedAt())
                     .days(days)
-                    .ownerFullName(barbershop.getCreatedBy().getFullName())
+                    .ownerFullName(barbershop.getOwner().getFullName())
                     .endTime(w.getCloseTime())
                     .startTime(w.getOpenTime())
                     .build();
 
             responses.add(b);
         }
-        Pageable pageable = Pageable.builder()
+       CustomerPageable pageable = CustomerPageable.builder()
                 .body(responses)
                 .page(all.getNumber())
                 .size(all.getSize())
@@ -153,16 +144,11 @@ public ApiResponse update(Integer id, BarbershopDto barbershopDto) {
     //
     barbershop.setName(barbershopDto.getName());
     barbershop.setInfo(barbershopDto.getInfo());
-    barbershop.setEmail(barbershop.getCreatedBy().getEmail());
+    barbershop.setEmail(barbershop.getOwner().getEmail());
     barbershop.setDistrict(byId1.get());
     barbershop.setFile(byId.get().getFile());
 
-    List<Days> days = new ArrayList<>();
-    for (Integer s : barbershopDto.getDays()) {
-        Days days1 = daysRepository.findById(s).orElse(null);
-        days.add(days1);
-    }
-    service.update(barbershopDto.getStartTime(), barbershopDto.getEndTime(), days, barbershop.getId());
+    service.update(barbershopDto.getStartTime(), barbershopDto.getEndTime(), barbershopDto.getDays(), barbershop.getId());
     return new ApiResponse("Barbershop updated successfully", 200);
 }
 

@@ -14,7 +14,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByServiceIdAndDeletedFalse(Integer serviceId);
 
 
-    Optional<Order> findByOrderDayTimeAndStartTimeAndEndTime(LocalDate date, LocalTime start, LocalTime end);
+    Optional<Order> findByOrderDayAndStartTimeAndEndTime(LocalDate date, LocalTime start, LocalTime end);
 
 
 }

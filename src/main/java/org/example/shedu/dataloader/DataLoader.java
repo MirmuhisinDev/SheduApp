@@ -22,8 +22,7 @@ public class DataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final DaysRepository daysRepository;
-    private final ServiceRepository serviceRepository;
-    private final BarbershopRepository barbershopRepository;
+
 
 
     @Value("${spring.jpa.hibernate.ddl-auto}")

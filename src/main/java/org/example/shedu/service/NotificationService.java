@@ -5,8 +5,7 @@ import org.aspectj.weaver.ast.Not;
 import org.example.shedu.entity.Notification;
 import org.example.shedu.entity.User;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.Pageable;
-import org.example.shedu.payload.request.NotificationDto;
+import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.response.NotificationResponse;
 import org.example.shedu.repository.NotificationRepository;
 import org.example.shedu.repository.UserRepository;
@@ -52,7 +51,7 @@ public class NotificationService {
     public ApiResponse all(int page, int size) {
         Page<Notification> notifications = notificationRepository.findAll(PageRequest.of(page, size));
         List<NotificationResponse> responses = notifications.map(this::toResponse).stream().toList();
-        Pageable pageable = Pageable.builder()
+        CustomerPageable pageable = CustomerPageable.builder()
                 .page(notifications.getNumber())
                 .size(notifications.getSize())
                 .totalPages(notifications.getTotalPages())

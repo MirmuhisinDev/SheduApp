@@ -16,7 +16,6 @@ import java.time.LocalTime;
 @Setter
 public class OrderDto {
 
-    private User user;
     private Integer serviceId;
     private Integer barbershopId;
     private LocalTime startTime;
