@@ -7,7 +7,7 @@ import org.example.shedu.entity.Service;
 import org.example.shedu.entity.User;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.CustomerPageable;
-import org.example.shedu.payload.request.OrderDto;
+import org.example.shedu.payload.request.OrderRequest;
 import org.example.shedu.payload.response.OrderResponse;
 import org.example.shedu.repository.BarbershopRepository;
 import org.example.shedu.repository.OrderRepository;
@@ -35,7 +35,7 @@ public class OrderService {
             return new ApiResponse("Barbershop not found", 400);
         }
 
-        Service byId2 = serviceRepository.findById(orderDto.getServiceId(), orderDto.getBarbershopId());
+        Service byId2 = serviceRepository.findByIdAndBarbershopIdAndDeletedFalse(orderDto.getServiceId(), orderDto.getBarbershopId());
         if (byId2 == null) {
             return new ApiResponse("Service not found", 400);
         }
@@ -48,7 +48,7 @@ public class OrderService {
         Order byOrder = orderRepository.findByOrderDayAndStartTimeAndEndTime(date, start, end).orElse(null);
 
         if(byOrder != null) {
-            return new ApiResponse("Order not found", 400);
+            return new ApiResponse("Order already exists", 400);
         }
         Order order = Order.builder()
                 .user(user)
@@ -62,7 +62,7 @@ public class OrderService {
         return new ApiResponse("Order created", 201);
     }
 
-    public ApiResponse getById(Integer id){
+    public ApiResponse getByIdOrder(Integer id){
         Optional<Order> byId = orderRepository.findById(id);
         if (byId.isEmpty()) {
             return new ApiResponse("Order not found", 404);
@@ -109,8 +109,6 @@ public class OrderService {
                 .build();
     }
 
-//    public ApiResponse updateOrder(){
-//
-//    }
+
 
 }

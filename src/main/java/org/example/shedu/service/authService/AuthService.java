@@ -80,9 +80,10 @@ public class AuthService {
 
     public ApiResponse saveMaster(RequestUser requestUser){
         Optional<User> byEmail = userRepository.findByEmail(requestUser.getEmail());
-        if(byEmail.isEmpty()){
-            return new ApiResponse("Emailingiz topilmadi",404);
+        if(byEmail.isPresent()){
+            return new ApiResponse("Email alraedy exists",404);
         }
+        int randomNumber = randomNumber();
         User user = User.builder()
                 .fullName(requestUser.getFullName())
                 .phoneNumber(requestUser.getPhoneNumber())
@@ -90,9 +91,12 @@ public class AuthService {
                 .email(requestUser.getEmail())
                 .password(passwordEncoder.encode(requestUser.getPassword()))
                 .role(Role.ROLE_MASTER)
+                .activationCode(randomNumber)
                 .enabled(false)
                 .build();
         userRepository.save(user);
+        emailSenderService.sendEmail(user.getEmail(), "VERIFY EMAIL", "Your activation code is: " + randomNumber);
+
         return new ApiResponse("Master muvoffaqiyatli saqlandi",201);
     }
 }

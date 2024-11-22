@@ -1,5 +1,6 @@
 package org.example.shedu.payload.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -11,7 +12,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Builder
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderResponse {
     private int id;
     private String BarbershopName;

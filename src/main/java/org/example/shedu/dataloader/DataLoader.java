@@ -42,9 +42,6 @@ public class DataLoader implements CommandLineRunner {
                     .build();
             userRepository.save(user);
 
-            User user1 = new User("asilbek", "998939393330", 12, "asil@gmail.com",
-                    passwordEncoder.encode("root123"), Role.ROLE_CUSTOMER);
-            userRepository.save(user1);
             Days days = new Days(Week.Dushanba);
             daysRepository.save(days);
             Days days1 = new Days(Week.Seshanba);
@@ -59,8 +56,6 @@ public class DataLoader implements CommandLineRunner {
             daysRepository.save(days5);
             Days days6 = new Days(Week.Yakshanba);
             daysRepository.save(days6);
-
-
         }
     }
 }

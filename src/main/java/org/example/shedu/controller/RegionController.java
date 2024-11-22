@@ -3,7 +3,7 @@ package org.example.shedu.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.request.RegionDto;
+import org.example.shedu.payload.request.RegionRequest;
 import org.example.shedu.service.RegionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ public class RegionController {
     private final RegionService regionService;
 
     @PostMapping("/add-region")
-    public ResponseEntity<ApiResponse> add(@RequestBody @Valid RegionDto regionDto) {
+    public ResponseEntity<ApiResponse> add(@RequestBody @Valid RegionRequest regionDto) {
         ApiResponse apiResponse = regionService.addRegion(regionDto);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
@@ -34,7 +34,7 @@ public class RegionController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse> update(@PathVariable Integer id, @RequestBody RegionDto regionDto) {
+    public ResponseEntity<ApiResponse> update(@PathVariable Integer id, @RequestBody RegionRequest regionDto) {
         ApiResponse apiResponse = regionService.updateRegion(regionDto, id);
         return ResponseEntity.ok(apiResponse);
     }

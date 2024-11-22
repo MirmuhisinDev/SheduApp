@@ -50,7 +50,7 @@ public class User implements UserDetails {
 
     private Integer activationCode;
 
-    private Boolean deleted;
+    private boolean deleted;
     private boolean enabled;
 
     @CreationTimestamp

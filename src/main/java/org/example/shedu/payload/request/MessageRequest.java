@@ -1,6 +1,5 @@
 package org.example.shedu.payload.request;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class DistrictDto {
-    private int regionId;
-    @NotBlank
-    private String districtName;
+public class MessageRequest {
+    private int chatId;
+    private String message;
 }

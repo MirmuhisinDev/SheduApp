@@ -3,10 +3,9 @@ package org.example.shedu.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.request.ServiceDto;
+import org.example.shedu.payload.request.ServiceRequest;
 import org.example.shedu.service.ServicesService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,9 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class ServiceController {
     private final ServicesService servicesService;
 
-//    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_MASTER')")
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addService(@RequestBody @Valid ServiceDto serviceDto){
+    public ResponseEntity<ApiResponse> addService(@RequestBody @Valid ServiceRequest serviceDto){
         ApiResponse apiResponse = servicesService.addService(serviceDto);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
@@ -37,7 +35,7 @@ public class ServiceController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse> updateService(@PathVariable Integer id,
-                                                     @RequestBody @Valid ServiceDto serviceDto){
+                                                     @RequestBody @Valid ServiceRequest serviceDto){
         ApiResponse apiResponse = servicesService.updateService(id, serviceDto);
         return ResponseEntity.ok(apiResponse);
     }

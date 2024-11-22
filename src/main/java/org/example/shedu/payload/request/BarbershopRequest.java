@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 
-public class BarbershopDto implements Serializable {
+public class BarbershopRequest implements Serializable {
     @NotBlank
     private String name;
     @NotBlank

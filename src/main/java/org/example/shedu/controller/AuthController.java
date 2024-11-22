@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 
 public class AuthController {
+
     private final AuthService authService;
 
     @PostMapping("/register")
@@ -33,6 +34,7 @@ public class AuthController {
         ApiResponse apiResponse = authService.activationCode(code);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
+
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     @PostMapping("/save-master")
     public ResponseEntity<ApiResponse> saveMaster(@RequestBody RequestUser user) {

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,5 @@ public interface ServiceRepository extends JpaRepository<Service, Integer> {
 //    Page<Service> findAllByDeletedFalse(Pageable pageRequest);
     boolean existsByServiceNameAndIdNot(String serviceName, Integer id);
 
-    @Query(value = "select s from Service s where s.id = ?1 and s.barbershop=?2 and s.deleted=false ")
-    Service findById(Integer id, Integer barbershopId);
+    Service findByIdAndBarbershopIdAndDeletedFalse(Integer serviceId, Integer barbershopId);
 }

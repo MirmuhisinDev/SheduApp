@@ -10,13 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ServiceDto {
+
+public class DistrictRequest {
+    private int regionId;
     @NotBlank
-    private String serviceName;
-    private Integer price;
-    private Integer serviceTime;
-    @NotBlank
-    private String description;
-    private Integer barbershopId;
-    private Long fileId;
+    private String districtName;
 }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.shedu.entity.*;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.CustomerPageable;
-import org.example.shedu.payload.request.ServiceDto;
+import org.example.shedu.payload.request.ServiceRequest;
 import org.example.shedu.payload.response.ServiceResponse;
 import org.example.shedu.repository.*;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ public class ServicesService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
 
-    public ApiResponse addService(ServiceDto serviceDto) {
+    public ApiResponse addService(ServiceRequest serviceDto) {
         Barbershop byId = barbershopRepository.findById(serviceDto.getBarbershopId()).orElse(null);
         if (byId == null) {
             return new ApiResponse("Barbershop does not exist!",404);
@@ -42,6 +42,7 @@ public class ServicesService {
                 .price(serviceDto.getPrice())
                 .serviceTime(serviceDto.getServiceTime())
                 .description(serviceDto.getDescription())
+                .deleted(false)
                 .file(file)
                 .build();
         serviceRepository.save(service);
@@ -94,7 +95,7 @@ public class ServicesService {
                 .build();
         return new ApiResponse(pageable);
     }
-    public ApiResponse updateService(Integer id, ServiceDto serviceDto) {
+    public ApiResponse updateService(Integer id, ServiceRequest serviceDto) {
         Optional<Service> byId = serviceRepository.findById(id);
         if (byId.isEmpty()) {
             return new ApiResponse("Service does not exist!",404);

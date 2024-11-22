@@ -6,7 +6,7 @@ import org.example.shedu.entity.District;
 import org.example.shedu.entity.Region;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.CustomerPageable;
-import org.example.shedu.payload.request.DistrictDto;
+import org.example.shedu.payload.request.DistrictRequest;
 import org.example.shedu.payload.response.DistrictResponse;
 import org.example.shedu.repository.BarbershopRepository;
 import org.example.shedu.repository.DistrictRepository;
@@ -27,7 +27,7 @@ public class DistrictService {
     private final RegionRepository regionRepository;
     private final BarbershopRepository barbershopRepository;
 
-    public ApiResponse addDistrict(DistrictDto districtDto) {
+    public ApiResponse addDistrict(DistrictRequest districtDto) {
         boolean b = districtRepository.existsByNameAndDeletedIsFalse(districtDto.getDistrictName());
         if (b) {
             return new ApiResponse("District already exists",400);
@@ -83,7 +83,7 @@ public class DistrictService {
         return new ApiResponse(pageable);
     }
 
-    public ApiResponse updateDistrict(Integer id, DistrictDto districtDto) {
+    public ApiResponse updateDistrict(Integer id, DistrictRequest districtDto) {
         Optional<District> byId = districtRepository.findById(id);
         if (byId.isEmpty()) {
             return new ApiResponse("District topilmadi.",404);

@@ -2,10 +2,9 @@ package org.example.shedu.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.shedu.entity.*;
-import org.example.shedu.entity.enums.Role;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.CustomerPageable;
-import org.example.shedu.payload.request.BarbershopDto;
+import org.example.shedu.payload.request.BarbershopRequest;
 import org.example.shedu.payload.response.BarbershopResponse;
 import org.example.shedu.repository.*;
 import org.springframework.data.domain.Page;
@@ -33,7 +32,7 @@ public class BarbershopService {
     private final DaysRepository daysRepository;
     private final WorkDaysService service;
 
-    public ApiResponse addBarbershop(BarbershopDto barbershopDto, User user) {
+    public ApiResponse addBarbershop(BarbershopRequest barbershopDto, User user) {
         if (barbershopRepository.existsByName(barbershopDto.getName())) {
             return new ApiResponse("Barbershop with name " + barbershopDto.getName() + " already exists", 400);
         }
@@ -124,7 +123,7 @@ public class BarbershopService {
         return new ApiResponse(pageable);
     }
 
-public ApiResponse update(Integer id, BarbershopDto barbershopDto) {
+public ApiResponse update(Integer id, BarbershopRequest barbershopDto) {
     Optional<Barbershop> byId = barbershopRepository.findById(id);
     if (byId.isEmpty()) {
         return new ApiResponse("Barbershop with id " + id + " does not exist", 404);

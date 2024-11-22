@@ -5,11 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ChatDto {
-    private int senderId;
-    private int receiverId;
+
+public class NotificationRequest {
+
+    private String title;
+    private Integer userID;
+    private boolean read;
+    private LocalDateTime createdAt;
 }

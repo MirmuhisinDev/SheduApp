@@ -27,7 +27,7 @@ public class Message {
 
     private boolean isRead;
 
-    private Boolean deleted;
+    private boolean deleted;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

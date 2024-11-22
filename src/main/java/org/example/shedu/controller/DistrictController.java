@@ -1,10 +1,9 @@
 package org.example.shedu.controller;
 
-import io.swagger.annotations.Api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.request.DistrictDto;
+import org.example.shedu.payload.request.DistrictRequest;
 import org.example.shedu.service.DistrictService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ public class DistrictController {
     private final DistrictService districtService;
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addDistrict(@RequestBody @Valid DistrictDto districtDto){
+    public ResponseEntity<ApiResponse> addDistrict(@RequestBody @Valid DistrictRequest districtDto){
         ApiResponse apiResponse = districtService.addDistrict(districtDto);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
@@ -35,7 +34,7 @@ public class DistrictController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse> updateDistrict(@PathVariable Integer id, @RequestBody @Valid DistrictDto districtDto){
+    public ResponseEntity<ApiResponse> updateDistrict(@PathVariable Integer id, @RequestBody @Valid DistrictRequest districtDto){
         ApiResponse apiResponse = districtService.updateDistrict(id, districtDto);
         return ResponseEntity.ok(apiResponse);
     }

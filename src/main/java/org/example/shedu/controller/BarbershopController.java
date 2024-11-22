@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.shedu.entity.User;
 import org.example.shedu.payload.ApiResponse;
-import org.example.shedu.payload.request.BarbershopDto;
+import org.example.shedu.payload.request.BarbershopRequest;
 import org.example.shedu.security.CurrentUser;
 import org.example.shedu.service.BarbershopService;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class BarbershopController {
    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_MASTER,')")
    @Operation(summary = "barbershop add",description = "yangi barbershop qushadi")
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addBarbershop(@RequestBody @Valid BarbershopDto barbershopDto,
+    public ResponseEntity<ApiResponse> addBarbershop(@RequestBody @Valid BarbershopRequest barbershopDto,
                                                      @CurrentUser User user){
         ApiResponse apiResponse = barbershopService.addBarbershop(barbershopDto, user);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
@@ -44,7 +44,7 @@ public class BarbershopController {
    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_MASTER,')")
    @Operation(summary = "barbershop update",description = "barbersni Update qiladi ")
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse> update(@RequestBody @Valid BarbershopDto dto,
+    public ResponseEntity<ApiResponse> update(@RequestBody @Valid BarbershopRequest dto,
                                               @PathVariable Integer id){
         ApiResponse update = barbershopService.update(id, dto);
         return ResponseEntity.ok(update);
