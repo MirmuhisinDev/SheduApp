@@ -15,4 +15,6 @@ public interface BarbershopRepository extends JpaRepository<Barbershop, Integer>
     Page<Barbershop> findAllByDeletedFalse(PageRequest pageable);
     List<Barbershop> findAllByDistrictIdAndDeletedFalse(Integer districtId);
     boolean existsByNameAndIdNot(String name, Integer id);
+
+    Optional<Barbershop> findByIdAndDeletedFalse(Integer id);
 }

@@ -29,9 +29,9 @@ public class OrderService {
     private final BarbershopRepository barbershopRepository;
     private final ServiceRepository serviceRepository;
 
-    public ApiResponse createOrder(OrderDto orderDto, User user) {
-        Optional<Barbershop> byId = barbershopRepository.findById(orderDto.getBarbershopId());
-        if (byId.isEmpty()) {
+    public ApiResponse createOrder(OrderRequest orderDto, User user) {
+        Barbershop byId = barbershopRepository.findById(orderDto.getBarbershopId()).orElse(null);
+        if (byId==null) {
             return new ApiResponse("Barbershop not found", 400);
         }
 
@@ -39,8 +39,6 @@ public class OrderService {
         if (byId2 == null) {
             return new ApiResponse("Service not found", 400);
         }
-
-
         LocalDate date= orderDto.getOrderDate();
         LocalTime start= orderDto.getStartTime();
         LocalTime end= orderDto.getEndTime();
@@ -53,7 +51,7 @@ public class OrderService {
         Order order = Order.builder()
                 .user(user)
                 .service(byId2)
-                .barbershop(byId.get())
+                .barbershop(byId)
                 .startTime(start)
                 .endTime(end)
                 .orderDay(date)
@@ -93,8 +91,6 @@ public class OrderService {
                 .build();
 
         return new ApiResponse(pageable);
-
-
     }
 
     private OrderResponse toResponse(Order order) {
@@ -108,7 +104,4 @@ public class OrderService {
                 .id(order.getId())
                 .build();
     }
-
-
-
 }

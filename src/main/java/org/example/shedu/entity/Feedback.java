@@ -31,10 +31,9 @@ public class Feedback {
     @Column(nullable = false)
     private String comment;
 
-    @Size(min = 1, max = 5, message = "Baholash tartibi 1 dan 5 gacha!")
-    private Integer rating;
+    private int rating;
 
-    private Boolean deleted;
+    private boolean deleted;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
