@@ -13,7 +13,6 @@ public class NotificationResponse {
     private int id;
     private String title;
     private String message;
-    private String userFullName;
     private LocalDateTime createdAt;
 
 

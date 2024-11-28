@@ -32,6 +32,7 @@ public class BarbershopService {
     private final DistrictRepository districtRepository;
     private final DaysRepository daysRepository;
     private final WorkDaysService service;
+    private final NotificationService notificationService;
 
     public ApiResponse addBarbershop(BarbershopDto barbershopDto, User user) {
         if (barbershopRepository.existsByName(barbershopDto.getName())) {
@@ -54,6 +55,12 @@ public class BarbershopService {
 
         barbershopRepository.save(barbershop);
         service.add(barbershopDto.getStartTime(), barbershopDto.getEndTime(), barbershopDto.getDays(), barbershop);
+        notificationService.addNotification(
+                user,
+                "Barbershop create!",
+                user.getFullName()+" create Barbershop "+LocalTime.now()
+
+        );
         return new ApiResponse("Barbershop with name " + barbershopDto.getName() + " added successfully", 200);
     }
 

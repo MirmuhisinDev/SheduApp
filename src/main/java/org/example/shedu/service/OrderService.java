@@ -28,6 +28,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final BarbershopRepository barbershopRepository;
     private final ServiceRepository serviceRepository;
+    private final NotificationService service;
 
     public ApiResponse createOrder(OrderDto orderDto, User user) {
         Optional<Barbershop> byId = barbershopRepository.findById(orderDto.getBarbershopId());
@@ -59,7 +60,13 @@ public class OrderService {
                 .orderDay(date)
                 .build();
         orderRepository.save(order);
+        service.addNotification(
+               user,
+               "Order create !",
+                user.getFullName()+": Order create "+LocalTime.now()
+        );
         return new ApiResponse("Order created", 201);
+
     }
 
     public ApiResponse getById(Integer id){
@@ -108,9 +115,4 @@ public class OrderService {
                 .id(order.getId())
                 .build();
     }
-
-//    public ApiResponse updateOrder(){
-//
-//    }
-
 }
