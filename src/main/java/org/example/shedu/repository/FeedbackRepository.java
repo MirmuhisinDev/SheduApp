@@ -11,4 +11,5 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
     List<Feedback> findAllByBarbershopIdAndDeletedFalse(Integer barbershopId);
 
     Page<Feedback> findAllByDeletedFalse(PageRequest pageable);
+    List<Feedback> findAllByUserIdAndDeletedFalse(Integer userId);
 }

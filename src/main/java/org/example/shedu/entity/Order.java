@@ -1,5 +1,7 @@
 package org.example.shedu.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.shedu.entity.enums.Status;
@@ -40,6 +42,7 @@ public class Order {
 
     private LocalDate orderDay;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     private boolean deleted;

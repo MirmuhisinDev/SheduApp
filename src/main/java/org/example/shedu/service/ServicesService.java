@@ -40,7 +40,6 @@ public class ServicesService {
                 .barbershop(byId)
                 .serviceName(serviceDto.getServiceName())
                 .price(serviceDto.getPrice())
-                .serviceTime(serviceDto.getServiceTime())
                 .description(serviceDto.getDescription())
                 .deleted(false)
                 .file(file)
@@ -62,9 +61,8 @@ public class ServicesService {
                 .barbershop(byId.get().getBarbershop().getName())
                 .serviceName(byId.get().getServiceName())
                 .price(byId.get().getPrice())
-                .serviceTime(byId.get().getServiceTime())
                 .description(byId.get().getDescription())
-                .filepath(file.getFilepath())
+                .fileId(byId.get().getFile() != null ? byId.get().getFile().getId() : null)
                 .createdAt(byId.get().getCreatedAt())
                 .build();
         return new ApiResponse(response);
@@ -78,10 +76,9 @@ public class ServicesService {
                     .id(service.getId())
                     .serviceName(service.getServiceName())
                     .price(service.getPrice())
-                    .serviceTime(service.getServiceTime())
                     .description(service.getDescription())
                     .barbershop(service.getBarbershop().getName())
-                    .filepath(service.getFile().getFilepath())
+                    .fileId(service.getFile() != null ? service.getFile().getId() : null)
                     .createdAt(service.getCreatedAt())
                     .build();
             responses.add(response);
@@ -113,7 +110,6 @@ public class ServicesService {
         Service service = byId.get();
         service.setServiceName(serviceDto.getServiceName());
         service.setPrice(serviceDto.getPrice());
-        service.setServiceTime(serviceDto.getServiceTime());
         service.setDescription(serviceDto.getDescription());
         service.setBarbershop(byId1.get());
         serviceRepository.save(service);

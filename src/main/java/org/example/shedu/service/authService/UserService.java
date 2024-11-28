@@ -1,12 +1,12 @@
 package org.example.shedu.service.authService;
 
 import lombok.RequiredArgsConstructor;
-import org.example.shedu.entity.User;
+import org.example.shedu.entity.*;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.auth.UpdateUser;
 import org.example.shedu.payload.response.UserResponse;
-import org.example.shedu.repository.UserRepository;
+import org.example.shedu.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -20,6 +20,10 @@ import java.util.Optional;
 
 public class UserService {
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+    private final FavouriteRepository favouriteRepository;
+    private final FeedbackRepository feedbackRepository;
+    private final ChatRepository chatRepository;
 
     public ApiResponse getById(Integer id){
         Optional<User> byId = userRepository.findById(id);
@@ -76,15 +80,47 @@ public class UserService {
 
     public ApiResponse delete(Integer id){
         Optional<User> byId = userRepository.findById(id);
-        if(byId.isPresent()){
-            User user = byId.get();
-            user.setDeleted(true);
-            userRepository.save(user);
-            return new ApiResponse("Sizning ma'lumotlaringiz muvaffaqiyatli o'chirildi.", 200);
+        if(byId.isEmpty()){
+            return new ApiResponse("User not found.", 404);
         }
-        return new ApiResponse("Sizning ma'lumotlaringiz topilmadi.",404);
+        List<Order> all = orderRepository.findAllByUserIdAndDeletedFalse(id);
+        List<Order> orders = new ArrayList<>();
+        for (Order order : all) {
+            order.setUser(null);
+            order.setDeleted(true);
+            orders.add(order);
+        }
+        List<Favourite> byUserId = favouriteRepository.findAllByUserIdAndDeletedFalse(id);
+        List<Favourite> favourites = new ArrayList<>();
+        for (Favourite favourite : byUserId) {
+            favourite.setDeleted(true);
+            favourite.setUser(null);
+            favourites.add(favourite);
+        }
+        List<Feedback> allByUserId = feedbackRepository.findAllByUserIdAndDeletedFalse(id);
+        List<Feedback> feedbacks = new ArrayList<>();
+        for (Feedback feedback : allByUserId) {
+            feedback.setDeleted(true);
+            feedback.setUser(null);
+            feedbacks.add(feedback);
+        }
+        List<Chat> allByDeletedFalse = chatRepository.findAllByReceiverIdAndSenderIdAndDeletedFalse(id, id);
+        List<Chat> chats = new ArrayList<>();
+        for (Chat chat : allByDeletedFalse) {
+            chat.setDeleted(true);
+            chat.setSender(null);
+            chat.setReceiver(null);
+            chats.add(chat);
+        }
+        User user = byId.get();
+        user.setDeleted(false);
+        userRepository.save(user);
+        orderRepository.saveAll(orders);
+        favouriteRepository.saveAll(favourites);
+        feedbackRepository.saveAll(feedbacks);
+        chatRepository.saveAll(chats);
+        return new ApiResponse("Success.",200);
     }
-
 
     public ApiResponse getMe(User user){
         UserResponse response = mapperUser(user);

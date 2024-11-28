@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByBarbershopIdAndDeletedFalse(Integer barbershopId);
     List<Order> findAllByServiceIdAndDeletedFalse(Integer serviceId);
-
-
+    Optional<Order> findByIdAndDeletedFalse(Integer id);
     Optional<Order> findByOrderDayAndStartTimeAndEndTime(LocalDate date, LocalTime start, LocalTime end);
+    List<Order> findAllByUserIdAndDeletedFalse(Integer userId);
 
 
 }

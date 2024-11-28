@@ -14,7 +14,6 @@ public class ServiceRequest {
     @NotBlank
     private String serviceName;
     private Integer price;
-    private Integer serviceTime;
     @NotBlank
     private String description;
     private Integer barbershopId;

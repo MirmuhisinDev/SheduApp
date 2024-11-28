@@ -26,6 +26,11 @@ public class Chat {
     @ManyToOne
     private User receiver;
 
+    @Column(nullable = false)
+    private String message;
+
+    @ManyToOne
+    private File file;
     private boolean deleted;
 
     @CreationTimestamp

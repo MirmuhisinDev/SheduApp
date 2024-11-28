@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
     List<Favourite> findAllByBarbershopIdAndDeletedFalse(Integer barbershopId);
 
-    @Query(nativeQuery = true, value = "select ")
-    Optional<Favourite> findByBarbershopIdAndDeletedFalse(Integer barbershopId);
+    List<Favourite> findAllByUserIdAndDeletedFalse(Integer id);
+
 }

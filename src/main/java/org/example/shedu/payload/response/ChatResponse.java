@@ -9,10 +9,11 @@ import lombok.*;
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MessageDto {
-    private String sender;
-    private String receiver;
+public class ChatResponse {
+    private int id;
+    private int sender;
+    private int receiver;
     private String message;
-    private boolean isRead;
+    private Long filId;
 
 }

@@ -2,6 +2,7 @@ package org.example.shedu.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.shedu.entity.*;
+import org.example.shedu.exception.GlobalExceptionHandle;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.request.BarbershopRequest;

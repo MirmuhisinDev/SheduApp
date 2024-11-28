@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChatRequest {
-    private int senderId;
     private int receiverId;
+    private String message;
+    private Long fileId;
 }

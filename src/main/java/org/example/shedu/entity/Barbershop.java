@@ -37,6 +37,7 @@ public class Barbershop {
 
     @ManyToOne
     private User owner;
+
     private boolean deleted;
 
     @CreationTimestamp

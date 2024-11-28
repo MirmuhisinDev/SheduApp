@@ -18,14 +18,11 @@ public class Service {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String serviceName;
 
     @Column(nullable = false)
     private Integer price;
-
-    @Column(nullable = false)
-    private Integer serviceTime;
 
     @Column(nullable = false)
     private String description;
