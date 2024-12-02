@@ -10,16 +10,21 @@ import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.request.OrderDto;
 import org.example.shedu.payload.request.OrderRequest;
+import org.example.shedu.payload.request.Ordered;
+import org.example.shedu.payload.request.UserDto;
 import org.example.shedu.payload.response.OrderResponse;
 import org.example.shedu.repository.BarbershopRepository;
 import org.example.shedu.repository.OrderRepository;
 import org.example.shedu.repository.ServiceRepository;
+import org.example.shedu.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +36,11 @@ public class OrderService {
     private final BarbershopRepository barbershopRepository;
     private final ServiceRepository serviceRepository;
     private final NotificationService notificationService;
+    private final UserRepository userRepository;
 
     public ApiResponse createOrder(OrderRequest orderDto, User user) {
         Barbershop byId = barbershopRepository.findById(orderDto.getBarbershopId()).orElse(null);
-        if (byId==null) {
+        if (byId == null) {
             return new ApiResponse("Barbershop not found", 400);
         }
 
@@ -42,29 +48,39 @@ public class OrderService {
         if (byId2 == null) {
             return new ApiResponse("Service not found", 400);
         }
-        LocalDate OrderDate = orderDto.getOrderDate();
-        LocalTime start= orderDto.getStartTime();
-        LocalTime end= orderDto.getEndTime();
 
-        Order byOrder = orderRepository.findByOrderDayAndStartTimeAndEndTime(OrderDate, start, end).orElse(null);
+        LocalDate orderDate = orderDto.getOrderDate();
+        LocalTime start = LocalTime.of(orderDto.getHour(), orderDto.getMinute());
+        LocalTime end = LocalTime.of(orderDto.getEndHour(), orderDto.getEndMinute());
 
-        if(byOrder != null) {
-            return new ApiResponse("Order already exists", 400);
+        if (start.isAfter(end) || end.isBefore(start) || orderDate.isBefore(LocalDate.now())) {
+            return new ApiResponse("Invalid input!", 400);
         }
+
+        Optional<Order> overlappingOrder = orderRepository.findByOrderDayAndTimeOverlap(orderDate, start, end);
+        if (overlappingOrder.isPresent()) {
+            return new ApiResponse("An overlapping order already exists", 400);
+        }
+
         Order order = Order.builder()
                 .user(user)
                 .service(byId2)
                 .barbershop(byId)
                 .startTime(start)
                 .endTime(end)
-                .orderDay(OrderDate)
+                .orderDay(orderDate)
                 .status(Status.PENDING)
                 .build();
+
         orderRepository.save(order);
         notificationService.addNotification(
                 user,
                 "Successfully ordered!",
-                " sizning buyurtmangiz muvafaqqiyatli qabul qilindi!"
+                "Sizning buyurtmangiz muvaffaqiyatli qabul qilindi!"
+        );notificationService.addNotification(
+                byId.getOwner(),
+                "You have new order!",
+                "Sizga " + orderDate + " da soat " + start + " dan " + end + " gacha yangi buyurtma bor! STATUS: " + order.getStatus().toString()
         );
         return new ApiResponse("Order created", 201);
     }
@@ -113,17 +129,7 @@ public class OrderService {
                 .id(order.getId())
                 .build();
     }
-    public ApiResponse deleteOrder(Integer id){
-        Optional<Order> byId = orderRepository.findById(id);
-        if (byId.isEmpty()) {
-            return new ApiResponse("Order not found", 404);
-        }
-        Order order = byId.get();
-        order.setDeleted(true);
-        order.setStatus(Status.CANCELLED);
-        orderRepository.save(order);
-        return new ApiResponse("Order deleted", 204);
-    }
+
     public ApiResponse doneOrder(Integer id){
         Optional<Order> byId = orderRepository.findById(id);
         if (byId.isEmpty()) {
@@ -140,18 +146,51 @@ public class OrderService {
             return new ApiResponse("Order not found", 404);
         }
 
-        LocalTime orderStart = orderDto.getStartTime();
-        LocalTime orderEnd = orderDto.getEndTime();
-        LocalDate OrderDate = orderDto.getOrderDate();
-        Optional<Order> byOrder = orderRepository.findByOrderDayAndStartTimeAndEndTime(OrderDate, orderStart, orderEnd);
-        if (byOrder.isPresent()) {
-            return new ApiResponse("Order already exists", 404);
+        LocalDate dateOrder = orderDto.getOrderDate();
+        LocalTime start = LocalTime.of(orderDto.getHour(), orderDto.getMinute());
+        LocalTime end = LocalTime.of(orderDto.getEndHour(), orderDto.getEndMinute());
+
+        if (start.isAfter(end) || end.isBefore(start) || dateOrder.isBefore(LocalDate.now())) {
+            return new ApiResponse("Invalid input!", 400);
+        }
+
+        Optional<Order> overlappingOrder = orderRepository.findByOrderDayAndTimeOverlap(dateOrder, start, end);
+        if (overlappingOrder.isPresent()) {
+            return new ApiResponse("An overlapping order already exists", 400);
         }
         Order order = byId.get();
-        order.setStartTime(orderStart);
-        order.setEndTime(orderEnd);
-        order.setOrderDay(OrderDate);
+        order.setStartTime(start);
+        order.setEndTime(end);
+        order.setOrderDay(dateOrder);
         orderRepository.save(order);
         return new ApiResponse("Order updated", 200);
+    }
+    public ApiResponse currentUserOrders(User user){
+        Optional<User> byId = userRepository.findByIdAndDeletedFalse(user.getId());
+        if (byId.isEmpty()) {
+            return new ApiResponse("User not found", 404);
+        }
+        List<Order> all = orderRepository.findAllByUserIdAndDeletedFalse(user.getId());
+        List<Ordered> orders = new ArrayList<>();
+        for (Order order : all) {
+            Ordered ordered = orderDto(order);
+            orders.add(ordered);
+        }
+        UserDto userDto = UserDto.builder()
+                .id(byId.get().getId())
+                .fullName(byId.get().getFullName())
+                .orders(orders)
+                .build();
+        return new ApiResponse("User's orders", 200, userDto);
+    }
+    public Ordered orderDto(Order order){
+        return Ordered.builder()
+                .serviceId(order.getService().getId())
+                .barbershopId(order.getBarbershop().getId())
+                .startTime(order.getStartTime())
+                .endTime(order.getEndTime())
+                .orderDate(order.getOrderDay())
+                .status(order.getStatus())
+                .build();
     }
 }

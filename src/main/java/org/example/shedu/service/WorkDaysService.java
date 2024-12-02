@@ -18,13 +18,16 @@ public class WorkDaysService {
     private final WorkDaysRepository workDaysRepository;
     private final DaysRepository daysRepository;
 
-    public void add(LocalTime start, LocalTime end, List<Integer> days, Barbershop barbershop) {
+    public void add(int startHour, int startMinute, int endHour, int endMinute, List<Integer> days, Barbershop barbershop) {
 
         List<Days> days1 = new ArrayList<>();
          for (Integer day : days) {
              Days days2=daysRepository.findById(day).orElse(null);
              days1.add(days2);
          }
+         LocalTime start = LocalTime.of(startHour, startMinute);
+         LocalTime end = LocalTime.of(endHour, endMinute);
+
             WorkDays workDay = new WorkDays();
             workDay.setBarbershop(barbershop);
             workDay.setOpenTime(start);

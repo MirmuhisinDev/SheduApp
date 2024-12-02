@@ -39,6 +39,7 @@ public class ServicesService {
         Service service = Service.builder()
                 .barbershop(byId)
                 .serviceName(serviceDto.getServiceName())
+                .serviceTime(serviceDto.getServiceTime())
                 .price(serviceDto.getPrice())
                 .description(serviceDto.getDescription())
                 .deleted(false)
@@ -59,6 +60,7 @@ public class ServicesService {
         ServiceResponse response = ServiceResponse.builder()
                 .id(byId.get().getId())
                 .barbershop(byId.get().getBarbershop().getName())
+                .serviceTime(byId.get().getServiceTime())
                 .serviceName(byId.get().getServiceName())
                 .price(byId.get().getPrice())
                 .description(byId.get().getDescription())
@@ -75,6 +77,7 @@ public class ServicesService {
             ServiceResponse response = ServiceResponse.builder()
                     .id(service.getId())
                     .serviceName(service.getServiceName())
+                    .serviceTime(service.getServiceTime())
                     .price(service.getPrice())
                     .description(service.getDescription())
                     .barbershop(service.getBarbershop().getName())
@@ -109,6 +112,7 @@ public class ServicesService {
         }
         Service service = byId.get();
         service.setServiceName(serviceDto.getServiceName());
+        service.setServiceTime(serviceDto.getServiceTime());
         service.setPrice(serviceDto.getPrice());
         service.setDescription(serviceDto.getDescription());
         service.setBarbershop(byId1.get());

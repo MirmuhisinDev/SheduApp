@@ -25,9 +25,10 @@ public class BarbershopRequest implements Serializable {
     private String info;
     private int districtId;
     private Long fileId;
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime startTime;
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime endTime;
+
+    private int startHour;
+    private int startMinute;
+    private int endHour;
+    private int endMinute;
     private List<Integer> days;
 }

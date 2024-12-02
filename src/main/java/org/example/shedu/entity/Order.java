@@ -39,6 +39,7 @@ public class Order {
 
     private LocalTime endTime;
 
+    private boolean sentNotification = false;
 
     private LocalDate orderDay;
 

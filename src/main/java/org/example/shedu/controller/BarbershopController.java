@@ -56,4 +56,9 @@ public class BarbershopController {
         ApiResponse delete = barbershopService.delete(id);
         return ResponseEntity.ok(delete);
     }
+    @GetMapping("/all services from Barbershop/{id}")
+    public ResponseEntity<ApiResponse> allServices(@PathVariable Integer id){
+        ApiResponse apiResponse = barbershopService.allServices(id);
+        return ResponseEntity.ok(apiResponse);
+    }
 }

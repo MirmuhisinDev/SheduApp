@@ -32,7 +32,7 @@ public class FavouriteController {
         return ResponseEntity.ok(one);
     }
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping("/all")
+    @GetMapping("/My favourite")
     public ResponseEntity<ApiResponse> getAll(@RequestParam(defaultValue = "0") int page,
                                               @RequestParam (defaultValue = "5") int size) {
         ApiResponse all = favouriteService.getAll(page, size);

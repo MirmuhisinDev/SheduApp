@@ -3,14 +3,17 @@ package org.example.shedu.service;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Not;
 import org.example.shedu.entity.Notification;
+import org.example.shedu.entity.Order;
 import org.example.shedu.entity.User;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.CustomerPageable;
 import org.example.shedu.payload.response.NotificationResponse;
 import org.example.shedu.repository.NotificationRepository;
+import org.example.shedu.repository.OrderRepository;
 import org.example.shedu.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -23,8 +26,9 @@ import java.util.Optional;
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
-    public ApiResponse addNotification(User userFullName, String title, String message) {
+    public void addNotification(User userFullName, String title, String message) {
         Notification notification = Notification.builder()
                 .title(title)
                 .message(message)
@@ -32,9 +36,28 @@ public class NotificationService {
                 .isRead(false)
                 .build();
         notificationRepository.save(notification);
-        return new ApiResponse("Notification added successfully",200);
+//        return new ApiResponse("Notification added successfully",200);
     }
-    public ApiResponse getById(Integer id) {
+    @Scheduled(fixedRate = 60000) // Har bir daqiqada tekshiriladi
+    public ApiResponse sendNotifications() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime notificationTime = now.plusMinutes(30);
+
+        // 30 daqiqa ichidagi buyurtmalarni topish
+        List<Order> orders = orderRepository.findByCreateAtBetweenAndSentNotificationFalse(now, notificationTime);
+
+        for (Order order : orders) {
+            // Adminga yoki foydalanuvchiga bildirishnoma yuboring
+            System.out.println("Notification sent for order ID: " + order.getBarbershop().getId()+
+                    "Sizning 30 daqiqadan ketin buyurtmangiz bor.");
+
+
+            order.setSentNotification(true);
+            orderRepository.save(order);
+        }
+        return new ApiResponse("Successfully sent notifications");
+    }
+    public ApiResponse getOneNotification(Integer id) {
         Optional<Notification> byId = notificationRepository.findById(id);
         if (byId.isEmpty()) {
             return new ApiResponse("Notification not found",404);
@@ -48,7 +71,8 @@ public class NotificationService {
                 .build();
         return new ApiResponse(response);
     }
-    public ApiResponse all(int page, int size) {
+
+    public ApiResponse allNotifications(int page, int size) {
         Page<Notification> notifications = notificationRepository.findAll(PageRequest.of(page, size));
         List<NotificationResponse> responses = notifications.map(this::toResponse).stream().toList();
         CustomerPageable pageable = CustomerPageable.builder()
@@ -80,4 +104,5 @@ public class NotificationService {
         notificationRepository.save(notification);
         return new ApiResponse("Notification read successfully",200);
     }
+
 }

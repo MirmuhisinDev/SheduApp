@@ -18,5 +18,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByFullName(String fullName);
 
     Page<User> findAllByDeletedFalse(PageRequest pageable);
+    Optional<User> findByIdAndDeletedFalse(Integer id);
 
 }

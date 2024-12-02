@@ -9,6 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ChatRequest {
-    private int receiverId;
+public class MessageDto {
+    private String message;
 }

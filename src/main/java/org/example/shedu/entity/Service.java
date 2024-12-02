@@ -24,6 +24,7 @@ public class Service {
     @Column(nullable = false)
     private Integer price;
 
+    private int serviceTime;
     @Column(nullable = false)
     private String description;
 

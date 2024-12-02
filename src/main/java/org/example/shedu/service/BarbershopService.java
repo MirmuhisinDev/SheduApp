@@ -5,7 +5,9 @@ import org.example.shedu.entity.*;
 import org.example.shedu.exception.GlobalExceptionHandle;
 import org.example.shedu.payload.ApiResponse;
 import org.example.shedu.payload.CustomerPageable;
+import org.example.shedu.payload.request.BarbershopDto;
 import org.example.shedu.payload.request.BarbershopRequest;
+import org.example.shedu.payload.request.ServiceDto;
 import org.example.shedu.payload.response.BarbershopResponse;
 import org.example.shedu.repository.*;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,7 @@ public class BarbershopService {
     private final DaysRepository daysRepository;
     private final WorkDaysService service;
 
+
     public ApiResponse addBarbershop(BarbershopRequest barbershopDto, User user) {
         if (barbershopRepository.existsByName(barbershopDto.getName())) {
             return new ApiResponse("Barbershop with name " + barbershopDto.getName() + " already exists", 400);
@@ -53,7 +56,9 @@ public class BarbershopService {
                 .build();
 
         barbershopRepository.save(barbershop);
-        service.add(barbershopDto.getStartTime(), barbershopDto.getEndTime(), barbershopDto.getDays(), barbershop);
+        service.add(barbershopDto.getStartHour(), barbershopDto.getStartMinute(),
+                barbershopDto.getEndHour(), barbershopDto.getEndMinute(), barbershopDto.getDays(),
+                barbershop);
         return new ApiResponse("Barbershop with name " + barbershopDto.getName() + " added successfully", 200);
     }
 
@@ -124,7 +129,7 @@ public class BarbershopService {
         return new ApiResponse(pageable);
     }
 
-public ApiResponse update(Integer id, BarbershopRequest barbershopDto) {
+    public ApiResponse update(Integer id, BarbershopRequest barbershopDto) {
     Optional<Barbershop> byId = barbershopRepository.findById(id);
     if (byId.isEmpty()) {
         return new ApiResponse("Barbershop with id " + id + " does not exist", 404);
@@ -148,11 +153,12 @@ public ApiResponse update(Integer id, BarbershopRequest barbershopDto) {
     barbershop.setDistrict(byId1.get());
     barbershop.setFile(byId.get().getFile());
 
-    service.update(barbershopDto.getStartTime(), barbershopDto.getEndTime(), barbershopDto.getDays(), barbershop.getId());
-    return new ApiResponse("Barbershop updated successfully", 200);
+        service.add(barbershopDto.getStartHour(), barbershopDto.getStartMinute(),
+                barbershopDto.getEndHour(), barbershopDto.getEndMinute(), barbershopDto.getDays(),
+                barbershop);    return new ApiResponse("Barbershop updated successfully", 200);
 }
 
-public ApiResponse delete(Integer id) {
+    public ApiResponse delete(Integer id) {
     Optional<Barbershop> byId = barbershopRepository.findById(id);
     if (byId.isEmpty()) {
         return new ApiResponse("Barbershop with id " + id + " does not exist", 404);
@@ -199,4 +205,31 @@ public ApiResponse delete(Integer id) {
     service.delete(barbershop.getId());
     return new ApiResponse("Barbershop deleted successfully", 200);
 }
+    public ApiResponse allServices(int id) {
+        Optional<Barbershop> byId = barbershopRepository.findByIdAndDeletedFalse(id);
+        if (byId.isEmpty()) {
+            return new ApiResponse("Barbershop with id " + id + " does not exist", 404);
+        }
+
+        List<Service> all = serviceRepository.findAllByBarbershopIdAndDeletedFalse(id);
+        List<ServiceDto> services = new ArrayList<>();
+        for (Service service : all) {
+            ServiceDto serviceDto = serviceDto(service);
+            services.add(serviceDto);
+        }
+        BarbershopDto dto = BarbershopDto.builder()
+                .id(byId.get().getId())
+                .barbershopName(byId.get().getName())
+                .services(services)
+                .build();
+        return new ApiResponse("Success", 200, dto);
+    }
+    public ServiceDto serviceDto(Service service) {
+        return ServiceDto.builder()
+                .id(service.getId())
+                .serviceName(service.getServiceName())
+                .price(service.getPrice())
+                .build();
+    }
+
 }

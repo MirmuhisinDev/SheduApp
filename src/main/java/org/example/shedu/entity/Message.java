@@ -1,6 +1,5 @@
 package org.example.shedu.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,22 +12,17 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Entity
-@Table(name = "chat")
-
-public class Chat {
+@Table(name = "message")
+public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+    private int id;
     @ManyToOne
-    private User sender;
-
-    @ManyToOne
-    private User receiver;
-
-
+    private Chat chat;
+    private String message;
+    private boolean read;
     private boolean deleted;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
+
 }

@@ -9,8 +9,8 @@ import lombok.*;
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ChatResponse {
+public class MessageResponse {
     private int id;
-    private int sender;
-    private int receiver;
+    private String message;
+    private boolean isRead;
 }

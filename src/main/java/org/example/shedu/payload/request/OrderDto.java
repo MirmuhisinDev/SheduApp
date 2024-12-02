@@ -15,9 +15,9 @@ import java.time.LocalTime;
 @Setter
 
 public class OrderDto {
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime startTime;
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime endTime;
+    private int hour;
+    private int minute;
+    private int endHour;
+    private int endMinute;
     private LocalDate orderDate;
 }

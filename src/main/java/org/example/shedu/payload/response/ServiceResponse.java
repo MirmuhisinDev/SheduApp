@@ -16,6 +16,7 @@ public class ServiceResponse {
     private int id;
     private String barbershop;
     private String serviceName;
+    private int serviceTime;
     private int price;
     private String description;
     private Long fileId;

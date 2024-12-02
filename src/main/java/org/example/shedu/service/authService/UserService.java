@@ -41,8 +41,7 @@ public class UserService {
     }
 
     public ApiResponse getAll(int page, int size){
-        PageRequest request = PageRequest.of(page, size);
-        Page<User> users = userRepository.findAllByDeletedFalse(request);
+        Page<User> users = userRepository.findAllByDeletedFalse(PageRequest.of(page, size));
         List<UserResponse> responses = new ArrayList<>();
         for (User user : users) {
             UserResponse response = UserResponse.builder()

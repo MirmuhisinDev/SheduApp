@@ -10,13 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ServiceRequest {
+public class MessageRequest {
+    private int chatId;
     @NotBlank
-    private String serviceName;
-    private int serviceTime;
-    private Integer price;
-    @NotBlank
-    private String description;
-    private Integer barbershopId;
-    private Long fileId;
+    private String message;
 }
